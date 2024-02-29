@@ -1,0 +1,29 @@
+#################### Files to exclude ####################
+# Log files
+*.log
+
+# Environment files
+**.env**
+
+################### Folders to exclude ###################
+# all IDE folders
+**vscode**
+**idea**
+
+# all cache folders
+**cache**
+
+# all environment folders
+**env**
+
+# all build folders
+**build*
+
+# all logs folders
+**logs**
+
+
+################## Files not to exclude ##################
+!.env.example
+
+################# Folders not to exclude #################
