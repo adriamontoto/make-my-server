@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  homarr:
+    container_name: homarr
+    image: ghcr.io/ajnart/homarr:latest
+    restart: unless-stopped
+    network_mode: bridge
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock # Optional, only if you want docker integration
+      - ./data/configs:/app/data/configs
+      - ./data/icons:/app/public/icons
+      - ./data/data:/data
+    environment:
+      - DEFAULT_COLOR_SCHEME:dark
+      - DISABLE_ANALYTICS:true
+      - NODE_TLS_REJECT_UNAUTHORIZED:0
+    ports:
+      - 80:7575
