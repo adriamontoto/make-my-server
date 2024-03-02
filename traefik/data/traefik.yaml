@@ -23,6 +23,9 @@ entryPoints:
   websecure:
     address: :443
 
+  mariadb:
+    address: :3306
+
 certificatesResolvers:
   staging:
     acme:
