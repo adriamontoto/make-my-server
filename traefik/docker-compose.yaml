@@ -15,3 +15,10 @@ services:
       - ./data/conf/:/etc/traefik/conf/
       - ./data/logs/:/var/log/traefik/
       - ./data/certs/:/etc/traefik/certs/
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.proxy.entrypoints=websecure
+      - traefik.http.services.proxy.loadbalancer.server.port=8080
+      - traefik.http.routers.proxy.rule=Host(`${TRAEFIK_DOMAIN}`)
+      - traefik.http.routers.proxy.tls=true
+      - traefik.http.routers.proxy.tls.certresolver=staging
