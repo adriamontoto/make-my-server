@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  minecraft_server_vanilla:
+    container_name: minecraft_server_vanilla
+    image: itzg/minecraft-server:latest
+    restart: unless-stopped
+    network_mode: bridge
+    ports:
+      - 25565:25565
+    tty: true
+    stdin_open: true
+    environment:
+      - EULA=true
+      - DIFFICULTY=hard
+    volumes:
+      - ./data:/data

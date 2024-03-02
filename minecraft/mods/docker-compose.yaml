@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  minecraft_server_mods:
+    container_name: minecraft_server_mods
+    image: itzg/minecraft-server:java8-jdk
+    restart: unless-stopped
+    network_mode: bridge
+    ports:
+      - 25555:25565
+    tty: true
+    stdin_open: true
+    environment:
+      - EULA=true
+      - INIT_MEMORY=4G
+      - MAX_MEMORY=8G
+      - TYPE=FORGE
+      - VERSION=1.12.2
+      - DIFFICULTY=hard
+    volumes:
+      - ./data:/data
