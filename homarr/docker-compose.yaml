@@ -22,4 +22,3 @@ services:
       - traefik.http.routers.dashboard.rule=Host(`${HOMARR_DOMAIN}`)
       - traefik.http.routers.dashboard.tls=true
       - traefik.http.routers.dashboard.tls.certresolver=staging
-
