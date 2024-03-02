@@ -10,8 +10,8 @@ services:
       - 53:53/tcp
       - 53:53/udp
     environment:
-      - TZ:${TZ}
-      - WEBPASSWORD:${PIHOLE_PASSWORD}
+      - TZ=${TZ}
+      - WEBPASSWORD=${PIHOLE_PASSWORD}
       - VIRTUAL_HOST=${PIHOLE_DOMAIN}
     volumes:
       - ./data/etc-pihole:/etc/pihole
