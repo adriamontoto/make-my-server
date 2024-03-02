@@ -9,10 +9,17 @@ services:
     ports:
       - 53:53/tcp
       - 53:53/udp
-      - 5353:80/tcp
     environment:
-      - TZ:'Europe/Madrid' # Default is UTC
+      - TZ:${TZ}
       - WEBPASSWORD:${PIHOLE_PASSWORD}
+      - VIRTUAL_HOST=${PIHOLE_DOMAIN}
     volumes:
       - ./data/etc-pihole:/etc/pihole
       - ./data/etc-dnsmasq.d:/etc/dnsmasq.d
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.dns.entrypoints=websecure
+      - traefik.http.services.dns.loadbalancer.server.port=80
+      - traefik.http.routers.dns.rule=Host(`${PIHOLE_DOMAIN}`)
+      - traefik.http.routers.dns.tls=true
+      - traefik.http.routers.dns.tls.certresolver=staging
