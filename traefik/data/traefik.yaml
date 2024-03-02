@@ -1,0 +1,43 @@
+global:
+  checkNewVersion: false
+  sendAnonymousUsage: false
+
+log:
+  level: ERROR
+  format: common
+  filePath: /var/log/traefik/traefik.log
+
+api:
+  dashboard: true
+  insecure: true
+  debug: false
+
+entryPoints:
+  web:
+    address: :80
+    http: # Redirect all HTTP to HTTPS
+      redirections:
+        entryPoint:
+          to: websecure
+          scheme: https
+  websecure:
+    address: :443
+
+certificatesResolvers:
+  staging:
+    acme:
+      email: 'info@home.local'
+      storage: /etc/traefik/certs/acme.json
+      caServer: 'https://acme-staging-v02.api.letsencrypt.org/directory'
+  production:
+    acme:
+      email: 'info@home.local'
+      storage: /etc/traefik/certs/acme.json
+      caServer: 'https://acme-v02.api.letsencrypt.org/directory'
+
+providers:
+  docker:
+    exposedByDefault: false
+  file:
+    directory: /etc/traefik
+    watch: true
