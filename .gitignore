@@ -22,6 +22,8 @@
 # all logs folders
 **logs**
 
+# all data folders
+**data**
 
 ################## Files not to exclude ##################
 !.env.example
