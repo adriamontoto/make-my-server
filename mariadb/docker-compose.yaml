@@ -11,5 +11,5 @@ services:
     volumes:
       - ./data:/var/lib/mysql
     environment:
-      - MARIADB_ROOT_PASSWORD:${MARIADB_ROOT_PASSWORD}
-      - MARIADB_DATABASE:${MARIADB_DATABASE}
+      - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
+      - MARIADB_DATABASE=${MARIADB_DATABASE}
