@@ -6,15 +6,10 @@ services:
     image: mariadb:latest
     restart: unless-stopped
     network_mode: bridge
+    ports:
+      - 3306:3306
     volumes:
       - ./data:/var/lib/mysql
     environment:
       - MARIADB_ROOT_PASSWORD:${MARIADB_ROOT_PASSWORD}
       - MARIADB_DATABASE:${MARIADB_DATABASE}
-    labels:
-      - traefik.enable=true
-      - traefik.tcp.routers.mariadb.entrypoints=mariadb
-      - traefik.tcp.services.mariadb.loadbalancer.server.port=3306
-      - traefik.tcp.routers.mariadb.rule=Host(`${MARIADB_DOMAIN}`)
-      - traefik.tcp.routers.mariadb.tls=true
-      - traefik.tcp.routers.mariadb.tls.certresolver=staging
