@@ -7,7 +7,7 @@ services:
     restart: unless-stopped
     network_mode: bridge
     ports:
-      - 3306:3306
+      - ${MARIADB_PORT:-3306}:3306
     volumes:
       - ./data:/var/lib/mysql
     environment:
