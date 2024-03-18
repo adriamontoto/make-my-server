@@ -1,0 +1,11 @@
+version: '3.8'
+
+include:
+  - path: 'traefik/docker-compose.yaml'
+  - path: 'homarr/docker-compose.yaml'
+  - path: 'portainer/docker-compose.yaml'
+  - path: 'uptimekuma/docker-compose.yaml'
+  - path: 'pihole/docker-compose.yaml'
+  - path: 'mariadb/docker-compose.yaml'
+  - path: 'minecraft/vanilla/docker-compose.yaml'
+  - path: 'minecraft/mods/docker-compose.yaml'
