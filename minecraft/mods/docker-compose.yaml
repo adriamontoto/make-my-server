@@ -3,11 +3,11 @@ version: '3.8'
 services:
   minecraft_server_mods:
     container_name: minecraft_server_mods
-    image: itzg/minecraft-server:java8-jdk
+    image: itzg/minecraft-server:${MINCRAFT_MODS_VERSION:-java8-jdk}
     restart: unless-stopped
     network_mode: bridge
     ports:
-      - 25555:25565
+      - '${MINCRAFT_MODS_PORT:-25555}:25565/udp'
     tty: true
     stdin_open: true
     environment:
