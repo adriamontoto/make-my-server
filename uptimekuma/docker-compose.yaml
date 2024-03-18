@@ -3,7 +3,7 @@ version: '3.8'
 services:
   uptimekuma:
     container_name: uptimekuma
-    image: louislam/uptime-kuma:latest
+    image: louislam/uptime-kuma:${UPTIMEKUMA_VERSION:-latest}
     restart: unless-stopped
     network_mode: bridge
     volumes:

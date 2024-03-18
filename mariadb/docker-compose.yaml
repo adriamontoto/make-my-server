@@ -3,7 +3,7 @@ version: '3.8'
 services:
   mariadb:
     container_name: mariadb
-    image: mariadb:latest
+    image: mariadb:${MARIADB_VERSION:-latest}
     restart: unless-stopped
     network_mode: bridge
     ports:

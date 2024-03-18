@@ -3,7 +3,7 @@ version: '3.8'
 services:
   portainer:
     container_name: portainer
-    image: portainer/portainer-ee:latest
+    image: portainer/portainer-ee:${PORTAINER_VERSION:-latest}
     restart: unless-stopped
     network_mode: bridge
     volumes:
