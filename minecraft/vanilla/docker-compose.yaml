@@ -12,6 +12,8 @@ services:
     stdin_open: true
     environment:
       - EULA=true
+      - VERSION=${MINECRAFT_VANILLA_GAME_VERSION:-LATEST}
       - DIFFICULTY=hard
+      - SERVER_NAME=${MINECRAFT_VANILLA_SERVER_NAME}
     volumes:
       - ./data:/data
