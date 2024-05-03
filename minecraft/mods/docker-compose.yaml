@@ -7,7 +7,7 @@ services:
     restart: unless-stopped
     network_mode: bridge
     ports:
-      - '${MINECRAFT_MODS_PORT:-25555}:25565/udp'
+      - '${MINECRAFT_MODS_PORT:-25555}:25565'
     tty: true
     stdin_open: true
     environment:
