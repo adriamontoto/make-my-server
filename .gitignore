@@ -5,6 +5,11 @@
 # Environment files
 **.env**
 
+# Certificate files
+**.crt**
+**.key**
+**.pem**
+
 ################### Folders to exclude ###################
 # all IDE folders
 **vscode**
