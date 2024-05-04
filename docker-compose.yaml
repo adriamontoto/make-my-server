@@ -1,5 +1,3 @@
-version: '3.8'
-
 include:
   - path: 'traefik/docker-compose.yaml'
   - path: 'homarr/docker-compose.yaml'
