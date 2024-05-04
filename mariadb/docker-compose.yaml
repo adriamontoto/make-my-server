@@ -8,6 +8,8 @@ services:
       - ${MARIADB_PORT:-3306}:3306
     volumes:
       - ./data:/var/lib/mysql
+      - ./certs:/etc/mysql/certificates
+      - ./config/50-server.cnf:/etc/mysql/conf.d/50-server.cnf
     environment:
       - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
       - MARIADB_DATABASE=${MARIADB_DATABASE}
