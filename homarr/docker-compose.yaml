@@ -19,4 +19,3 @@ services:
       - traefik.http.services.dashboard.loadbalancer.server.port=7575
       - traefik.http.routers.dashboard.rule=Host(`${HOMARR_DOMAIN}`)
       - traefik.http.routers.dashboard.tls=true
-      - traefik.http.routers.dashboard.tls.certresolver=staging

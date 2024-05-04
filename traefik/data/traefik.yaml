@@ -23,17 +23,10 @@ entryPoints:
   websecure:
     address: :443
 
-certificatesResolvers:
-  staging:
-    acme:
-      email: 'info@home.local'
-      storage: /etc/traefik/certs/acme.json
-      caServer: 'https://acme-staging-v02.api.letsencrypt.org/directory'
-  production:
-    acme:
-      email: 'info@home.local'
-      storage: /etc/traefik/certs/acme.json
-      caServer: 'https://acme-v02.api.letsencrypt.org/directory'
+tls:
+  certificates:
+    - certFile: /etc/traefik/certs/cert.crt
+      keyFile: /etc/traefik/certs/private.key
 
 providers:
   docker:

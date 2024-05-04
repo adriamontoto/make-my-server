@@ -20,4 +20,3 @@ services:
       - traefik.http.services.dns.loadbalancer.server.port=80
       - traefik.http.routers.dns.rule=Host(`${PIHOLE_DOMAIN}`)
       - traefik.http.routers.dns.tls=true
-      - traefik.http.routers.dns.tls.certresolver=staging

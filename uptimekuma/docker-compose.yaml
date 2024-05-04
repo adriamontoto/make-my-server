@@ -13,4 +13,3 @@ services:
       - traefik.http.services.monitoring.loadbalancer.server.port=3001
       - traefik.http.routers.monitoring.rule=Host(`${UPTIMEKUMA_DOMAIN}`)
       - traefik.http.routers.monitoring.tls=true
-      - traefik.http.routers.monitoring.tls.certresolver=staging
