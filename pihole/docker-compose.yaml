@@ -6,7 +6,7 @@ services:
     network_mode: bridge
     ports:
       - 53:53/tcp
-      - 53:53/udp
+      - ${SERVER_HOST}:53:53/udp
     environment:
       - TZ=${TZ}
       - WEBPASSWORD=${PIHOLE_PASSWORD}
