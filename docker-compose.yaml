@@ -7,4 +7,5 @@ include:
   - path: 'mariadb/docker-compose.yaml'
   - path: 'minecraft/vanilla/docker-compose.yaml'
   - path: 'minecraft/mods/docker-compose.yaml'
+  - path: 'wireguard/docker-compose.yaml'
   - path: 'cloudflare_ddns/docker-compose.yaml'
