@@ -28,6 +28,9 @@ tls:
     - certFile: /etc/traefik/certs/cert.crt
       keyFile: /etc/traefik/certs/private.key
 
+serversTransport:
+  insecureSkipVerify: true
+
 providers:
   docker:
     exposedByDefault: false
