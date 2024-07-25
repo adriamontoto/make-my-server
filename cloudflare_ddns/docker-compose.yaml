@@ -4,17 +4,13 @@ services:
     image: favonia/cloudflare-ddns:${CLOUDFLARE_DDNS_VERSION:-latest}
     restart: unless-stopped
     network_mode: bridge
-    cap_add:
-      - SETUID
-      - SETGID
+    user: "1000:1000"
     cap_drop:
       - all
     read_only: true
     security_opt:
       - no-new-privileges:true
     environment:
-      - PUID=1000
-      - PGID=1000
       - UPDATE_ON_START=true
       - DELETE_ON_STOP=true
       - IP6_PROVIDER=none
