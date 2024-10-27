@@ -1,0 +1,9 @@
+include:
+  - path: 'traefik/compose.yaml'
+  - path: 'homarr/compose.yaml'
+  - path: 'portainer/compose.yaml'
+  - path: 'uptimekuma/compose.yaml'
+  - path: 'pihole/compose.yaml'
+  - path: 'mariadb/compose.yaml'
+  - path: 'minecraft/vanilla/compose.yaml'
+  - path: 'minecraft/mods/compose.yaml'
