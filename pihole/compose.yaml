@@ -7,8 +7,6 @@ services:
     ports:
       - 53:53/tcp
       - 53:53/udp
-    security_opt:
-      - no-new-privileges:true
     environment:
       - TZ=${TZ}
       - WEBPASSWORD=${PIHOLE_PASSWORD}
