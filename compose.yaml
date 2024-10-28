@@ -1,5 +1,4 @@
 include:
-  - path: 'traefik/compose.yaml'
   - path: 'homarr/compose.yaml'
   - path: 'portainer/compose.yaml'
   - path: 'uptimekuma/compose.yaml'

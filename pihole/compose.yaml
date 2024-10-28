@@ -10,16 +10,10 @@ services:
     environment:
       - TZ=${TZ}
       - WEBPASSWORD=${PIHOLE_PASSWORD}
-      - VIRTUAL_HOST=${PIHOLE_DOMAIN}
       - PIHOLE_DNS_=1.1.1.1;9.9.9.9
       - DNSSEC=true
       - DNSMASQ_LISTENING=all
     volumes:
       - ./data/etc-pihole:/etc/pihole
       - ./data/etc-dnsmasq.d:/etc/dnsmasq.d
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.dns.entrypoints=websecure
-      - traefik.http.services.dns.loadbalancer.server.port=80
-      - traefik.http.routers.dns.rule=Host(`${PIHOLE_DOMAIN}`)
-      - traefik.http.routers.dns.tls=true
+
