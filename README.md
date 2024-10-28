@@ -1,41 +1,94 @@
+<a name="readme-top"></a>
+
 # Make my server! 🐣💻
-This repository contains the configuration/deployment files for my home server, basically using docker compose.
+This repository provides the configuration and deployment files for setting up a home server using compose. Enjoy an organized environment right from your home!
+<br><br>
 
 
-## Services Included
-- **Traefik**: A reverse proxy and load balancer for HTTP, TCP and UDP based connections.
-- **Homarr**: A dashboard for having all your services in one place.
-- **Portainer**: A lightweight management tool that allows you to easily manage your Docker containers.
-- **Uptimekuma**: A self-hosted monitoring and alerting service.
-- **Pihole**: A DNS server that can block ads for all devices on your network.
-- **MariaDB**: A relational database server.
-- **Minecraft (vanilla)**: A vanilla minecraft server.
-- **Minecraft (mods)**: A minecraft server with mods (*mods not included* 😝).
+## Table of Contents
+- [📋 Services Included](#services)
+- [🚀 Deployment Steps](#deployment)
+- [🔄 Tear Down](#tear-down)
+- [🔑 License](#license)
+<p align="right">
+    <a href="#readme-top">🔼 Back to top</a>
+</p>
+<br><br>
 
 
-## Deployment
-1. Create a fork of this repository
+<a name="services"></a>
 
-2. Clone your forked repository to your server
+## 📋 Services Included
+- **Nginx Proxy Manager:** Reverse proxy and load balancing with TLS support.
+- **Homarr:** A user-friendly dashboard to access all your services in one place.
+- **Portainer:** Lightweight container management tool.
+- **Uptimekuma:** Self-hosted monitoring and alerting for your services.
+- **Pihole:** Network-wide ad-blocking DNS server.
+- **PostgreSQL:** A powerful, open-source relational database server.
+- **Minecraft Server (vanilla):** A vanilla Minecraft server.
+- **Minecraft Server (mods):** A Minecraft server with mod support.
+<p align="right">
+    <a href="#readme-top">🔼 Back to top</a>
+</p>
+<br><br>
+
+
+<a name="deployment"></a>
+
+## 🚀 Deployment Steps
+**1. Fork this repository**
+<br><br>
+
+**2. Clone your fork** <br>
+Clone the repository to your server:
 ```bash
+# Via HTTPs
 git clone https://github.com/<your_username>/make-my-server.git
 ```
+```bash
+# Via SSH
+git clone git@github.com:<your_username>/make-my-server.git
+```
+<br>
 
-3. Copy the `.env.example` file to `.env` and fill in the environment variables
+**3. Configure environment variables** <br>
+Copy the example environment file and customize it:
 ```bash
 cp .env.example .env
 ```
+<br>
 
-4. Deploy the services using docker-compose in the root folder
+**4. Deploy services** <br>
+Start your server with docker compose using the compose.yaml file in the root directory:
 ```bash
-docker-compose up -d
+docker compose up --detach
 ```
+<br>
 
-5. Enjoy your new server! 😀
+**5. Enjoy your new server 🎉**
+<p align="right">
+    <a href="#readme-top">🔼 Back to top</a>
+</p>
+<br><br>
 
 
-## Tear Down
-To tear down the services, run the following command in the root folder
+<a name="tear-down"></a>
+
+## 🔄 Tear Down
+To stop and remove all running services, use:
 ```bash
-docker-compose down
+docker compose down
 ```
+<p align="right">
+    <a href="#readme-top">🔼 Back to top</a>
+</p>
+<br><br>
+
+
+<a name="license"></a>
+## 🔑 License
+This project is licensed under the terms of the [MIT license](https://choosealicense.com/licenses/mit/).
+<p align="right">
+    <a href="#readme-top">🔼 Back to top</a>
+</p>
+<br><br>
