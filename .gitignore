@@ -30,6 +30,9 @@
 # all data folders
 **data**
 
+# letsencrypt folder
+**letsencrypt**
+
 ################## Files not to exclude ##################
 !.env.example
 
