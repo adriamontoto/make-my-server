@@ -1,6 +1,6 @@
 <a name="readme-top"></a>
 
-# Make my server! 🐣💻
+# 🐣💻 Make my server!
 This repository provides the configuration and deployment files for setting up a home server using compose. Enjoy an organized environment right from your home!
 <br><br>
 
