@@ -5,7 +5,7 @@
 # environment files
 **.env**
 
-# Certificate files
+# certificate files
 **.crt**
 **.key**
 **.pem**
