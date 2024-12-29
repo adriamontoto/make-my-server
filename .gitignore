@@ -1,8 +1,8 @@
 #################### Files to exclude ####################
-# Log files
+# log files
 *.log
 
-# Environment files
+# environment files
 **.env**
 
 # Certificate files
@@ -11,23 +11,20 @@
 **.pem**
 
 ################### Folders to exclude ###################
-# all IDE folders
+# IDE folders
 **vscode**
 **idea**
 
-# all cache folders
+# cache folders
 **cache**
 
-# all environment folders
+# environment folders
 **env**
 
-# all build folders
-**build*
-
-# all logs folders
+# logs folders
 **logs**
 
-# all data folders
+# data folders
 **data**
 
 # letsencrypt folder
