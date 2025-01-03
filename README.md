@@ -24,7 +24,6 @@ This repository provides the configuration ⚒️ and deployment files for setti
 - **Homarr:** A user-friendly dashboard to access all your services in one place.
 - **Portainer:** Lightweight container management tool.
 - **Uptimekuma:** Self-hosted monitoring and alerting for your services.
-- **Pihole:** Network-wide ad-blocking DNS server.
 - **PostgreSQL:** A powerful, open-source relational database server.
 - **Minecraft Server (vanilla):** A vanilla Minecraft server.
 - **Minecraft Server (mods):** A Minecraft server with mod support.
