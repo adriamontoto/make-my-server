@@ -1,0 +1,6 @@
+---
+- name: Reboot If Required
+  become: true
+  reboot:
+    msg: 'Reboot initiated by Ansible after package upgrades.'
+    reboot_timeout: 600
