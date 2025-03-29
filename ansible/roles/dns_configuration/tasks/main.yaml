@@ -8,8 +8,8 @@
     mode: '0644'
     path: /etc/systemd/resolved.conf
     no_extra_spaces: true
-  register: primary_dns_servers_register
-  when: primary_dns_servers | length > 0
+  when: (primary_dns_servers | default([])) | length > 0
+  notify: Restart systemd-resolved Service
 
 - name: Add Fallback DNS Servers
   become: true
@@ -20,8 +20,8 @@
     mode: '0644'
     path: /etc/systemd/resolved.conf
     no_extra_spaces: true
-  register: fallback_dns_servers_register
-  when: fallback_dns_servers | length > 0
+  when: (fallback_dns_servers | default([])) | length > 0
+  notify: Restart systemd-resolved Service
 
 - name: Add Server DNS Domains
   become: true
@@ -32,8 +32,8 @@
     mode: '0644'
     path: /etc/systemd/resolved.conf
     no_extra_spaces: true
-  register: dns_domains_register
-  when: dns_domains | length > 0
+  when: (dns_domains | default([])) | length > 0
+  notify: Restart systemd-resolved Service
 
 - name: Enable DNSSEC
   become: true
@@ -44,8 +44,8 @@
     mode: '0644'
     path: /etc/systemd/resolved.conf
     no_extra_spaces: true
-  register: dns_dnssec_register
   when: dns_dnssec is defined
+  notify: Restart systemd-resolved Service
 
 - name: Enable DNSOverTLS
   become: true
@@ -56,8 +56,8 @@
     mode: '0644'
     path: /etc/systemd/resolved.conf
     no_extra_spaces: true
-  register: dns_over_tls_register
   when: dns_over_tls is defined
+  notify: Restart systemd-resolved Service
 
 - name: Enable MulticastDNS
   become: true
@@ -68,8 +68,8 @@
     mode: '0644'
     path: /etc/systemd/resolved.conf
     no_extra_spaces: true
-  register: dns_multicast_dns_register
   when: dns_multicast is defined
+  notify: Restart systemd-resolved Service
 
 - name: Enable LLMNR
   become: true
@@ -80,8 +80,8 @@
     mode: '0644'
     path: /etc/systemd/resolved.conf
     no_extra_spaces: true
-  register: dns_llmnr_register
   when: dns_llmnr is defined
+  notify: Restart systemd-resolved Service
 
 - name: Configure Cache
   become: true
@@ -92,8 +92,8 @@
     mode: '0644'
     path: /etc/systemd/resolved.conf
     no_extra_spaces: true
-  register: dns_cache_register
   when: dns_cache is defined
+  notify: Restart systemd-resolved Service
 
 - name: Configure CacheFromLocalhost
   become: true
@@ -104,8 +104,8 @@
     mode: '0644'
     path: /etc/systemd/resolved.conf
     no_extra_spaces: true
-  register: dns_cache_from_localhost_register
   when: dns_cache_from_localhost is defined
+  notify: Restart systemd-resolved Service
 
 - name: Configure DNSStubListener
   become: true
@@ -116,8 +116,8 @@
     mode: '0644'
     path: /etc/systemd/resolved.conf
     no_extra_spaces: true
-  register: dns_stub_listener_register
   when: dns_stub_listener is defined
+  notify: Restart systemd-resolved Service
 
 - name: Configure DNSStubListenerExtra
   become: true
@@ -128,8 +128,8 @@
     mode: '0644'
     path: /etc/systemd/resolved.conf
     no_extra_spaces: true
-  register: dns_stub_listener_extra_register
-  when: dns_stub_listener_extra | length > 0
+  when: (dns_stub_listener_extra | default([])) | length > 0
+  notify: Restart systemd-resolved Service
 
 - name: Configure ReadEtcHosts
   become: true
@@ -140,8 +140,8 @@
     mode: '0644'
     path: /etc/systemd/resolved.conf
     no_extra_spaces: true
-  register: dns_read_etc_hosts_register
   when: dns_read_etc_hosts is defined
+  notify: Restart systemd-resolved Service
 
 - name: Configure ResolveUnicastSingleLabel
   become: true
@@ -152,8 +152,8 @@
     mode: '0644'
     path: /etc/systemd/resolved.conf
     no_extra_spaces: true
-  register: dns_resolve_unicast_single_label_register
   when: dns_resolve_unicast_single_label is defined
+  notify: Restart systemd-resolved Service
 
 - name: Configure StaleRetentionSec
   become: true
@@ -164,32 +164,12 @@
     mode: '0644'
     path: /etc/systemd/resolved.conf
     no_extra_spaces: true
-  register: dns_stale_retention_register
   when: dns_stale_retention is defined
+  notify: Restart systemd-resolved Service
 
 - name: Check if systemd-resolved is Running
   ansible.builtin.shell: pgrep systemd-resolve
   failed_when: false
   changed_when: false
   check_mode: false
-  register: systemd_resolved_register
-
-- name: Reload systemd-resolved Service
-  ansible.builtin.command: /bin/true
-  notify: Reload systemd-resolved Service
-  when:
-    - primary_dns_servers_register.changed or
-      fallback_dns_servers_register.changed or
-      dns_domains_register.changed or
-      dns_dnssec_register.changed or
-      dns_over_tls_register.changed or
-      dns_multicast_dns_register.changed or
-      dns_llmnr_register.changed or
-      dns_cache_register.changed or
-      dns_cache_from_localhost_register.changed or
-      dns_stub_listener_register.changed or
-      dns_stub_listener_extra_register.changed or
-      dns_read_etc_hosts_register.changed or
-      dns_resolve_unicast_single_label_register.changed or
-      dns_stale_retention_register.changed
-    - systemd_resolved_register.rc == 0
+  notify: Restart systemd-resolved Service
