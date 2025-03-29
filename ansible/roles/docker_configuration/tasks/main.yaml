@@ -1,0 +1,46 @@
+---
+- name: Install Required Packages
+  become: true
+  apt:
+    name: '{{ item }}'
+    state: present
+  loop:
+    - curl
+    - ca-certificates
+
+- name: Add Docker GPG Key
+  become: true
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+
+- name: Add Docker Repository to APT for x86_64 Architecture
+  become: true
+  when: ansible_architecture == 'x86_64'
+  apt_repository:
+    repo: 'deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable'
+    state: present
+
+- name: Add Docker Repository to APT for arm64 Architecture
+  become: true
+  when: ansible_architecture == 'aarch64'
+  apt_repository:
+    repo: 'deb [arch=arm64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable'
+    state: present
+
+- name: Update APT Cache
+  become: true
+  apt:
+    update_cache: true
+
+- name: Install Docker Packages
+  become: true
+  apt:
+    name: '{{ item }}'
+    state: present
+  loop:
+    - docker-ce
+    - containerd.io
+    - docker-ce-cli
+    - docker-buildx-plugin
+    - docker-compose-plugin
