@@ -1,0 +1,32 @@
+---
+primary_dns_servers:
+  - 1.1.1.1
+  - 9.9.9.9
+
+fallback_dns_servers:
+  - 1.1.1.1
+  - 9.9.9.9
+
+dns_domains: []
+
+dns_dnssec: true
+
+dns_over_tls: false
+
+dns_multicast: false
+
+dns_llmnr: false
+
+dns_cache: no-negative
+
+dns_cache_from_localhost: false
+
+dns_stub_listener: true
+
+dns_stub_listener_extra: []
+
+dns_read_etc_hosts: true
+
+dns_resolve_unicast_single_label: false
+
+dns_stale_retention: 3600

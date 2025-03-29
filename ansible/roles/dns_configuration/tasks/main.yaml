@@ -1,0 +1,195 @@
+---
+- name: Add Primary DNS Servers
+  become: true
+  community.general.ini_file:
+    section: Resolve
+    option: DNS
+    value: '{{ primary_dns_servers | join(" ") }}'
+    mode: '0644'
+    path: /etc/systemd/resolved.conf
+    no_extra_spaces: true
+  register: primary_dns_servers_register
+  when: primary_dns_servers | length > 0
+
+- name: Add Fallback DNS Servers
+  become: true
+  community.general.ini_file:
+    section: Resolve
+    option: FallbackDNS
+    value: '{{ fallback_dns_servers | join(" ") }}'
+    mode: '0644'
+    path: /etc/systemd/resolved.conf
+    no_extra_spaces: true
+  register: fallback_dns_servers_register
+  when: fallback_dns_servers | length > 0
+
+- name: Add Server DNS Domains
+  become: true
+  community.general.ini_file:
+    section: Resolve
+    option: Domains
+    value: '{{ dns_domains | join(" ") }}'
+    mode: '0644'
+    path: /etc/systemd/resolved.conf
+    no_extra_spaces: true
+  register: dns_domains_register
+  when: dns_domains | length > 0
+
+- name: Enable DNSSEC
+  become: true
+  community.general.ini_file:
+    section: Resolve
+    option: DNSSEC
+    value: '{{ "yes" if dns_dnssec else "no" }}'
+    mode: '0644'
+    path: /etc/systemd/resolved.conf
+    no_extra_spaces: true
+  register: dns_dnssec_register
+  when: dns_dnssec is defined
+
+- name: Enable DNSOverTLS
+  become: true
+  community.general.ini_file:
+    section: Resolve
+    option: DNSOverTLS
+    value: '{{ "yes" if dns_over_tls else "no" }}'
+    mode: '0644'
+    path: /etc/systemd/resolved.conf
+    no_extra_spaces: true
+  register: dns_over_tls_register
+  when: dns_over_tls is defined
+
+- name: Enable MulticastDNS
+  become: true
+  community.general.ini_file:
+    section: Resolve
+    option: MulticastDNS
+    value: '{{ "yes" if dns_multicast else "no" }}'
+    mode: '0644'
+    path: /etc/systemd/resolved.conf
+    no_extra_spaces: true
+  register: dns_multicast_dns_register
+  when: dns_multicast is defined
+
+- name: Enable LLMNR
+  become: true
+  community.general.ini_file:
+    section: Resolve
+    option: LLMNR
+    value: '{{ "yes" if dns_llmnr else "no" }}'
+    mode: '0644'
+    path: /etc/systemd/resolved.conf
+    no_extra_spaces: true
+  register: dns_llmnr_register
+  when: dns_llmnr is defined
+
+- name: Configure Cache
+  become: true
+  community.general.ini_file:
+    section: Resolve
+    option: Cache
+    value: '{{ "yes" if dns_cache else "no" }}'
+    mode: '0644'
+    path: /etc/systemd/resolved.conf
+    no_extra_spaces: true
+  register: dns_cache_register
+  when: dns_cache is defined
+
+- name: Configure CacheFromLocalhost
+  become: true
+  community.general.ini_file:
+    section: Resolve
+    option: CacheFromLocalhost
+    value: '{{ "yes" if dns_cache_from_localhost else "no" }}'
+    mode: '0644'
+    path: /etc/systemd/resolved.conf
+    no_extra_spaces: true
+  register: dns_cache_from_localhost_register
+  when: dns_cache_from_localhost is defined
+
+- name: Configure DNSStubListener
+  become: true
+  community.general.ini_file:
+    section: Resolve
+    option: DNSStubListener
+    value: '{{ "yes" if dns_stub_listener else "no" }}'
+    mode: '0644'
+    path: /etc/systemd/resolved.conf
+    no_extra_spaces: true
+  register: dns_stub_listener_register
+  when: dns_stub_listener is defined
+
+- name: Configure DNSStubListenerExtra
+  become: true
+  community.general.ini_file:
+    section: Resolve
+    option: DNSStubListenerExtra
+    value: '{{ dns_stub_listener_extra | join(" ") }}'
+    mode: '0644'
+    path: /etc/systemd/resolved.conf
+    no_extra_spaces: true
+  register: dns_stub_listener_extra_register
+  when: dns_stub_listener_extra | length > 0
+
+- name: Configure ReadEtcHosts
+  become: true
+  community.general.ini_file:
+    section: Resolve
+    option: ReadEtcHosts
+    value: '{{ "yes" if dns_read_etc_hosts else "no" }}'
+    mode: '0644'
+    path: /etc/systemd/resolved.conf
+    no_extra_spaces: true
+  register: dns_read_etc_hosts_register
+  when: dns_read_etc_hosts is defined
+
+- name: Configure ResolveUnicastSingleLabel
+  become: true
+  community.general.ini_file:
+    section: Resolve
+    option: ResolveUnicastSingleLabel
+    value: '{{ "yes" if dns_resolve_unicast_single_label else "no" }}'
+    mode: '0644'
+    path: /etc/systemd/resolved.conf
+    no_extra_spaces: true
+  register: dns_resolve_unicast_single_label_register
+  when: dns_resolve_unicast_single_label is defined
+
+- name: Configure StaleRetentionSec
+  become: true
+  community.general.ini_file:
+    section: Resolve
+    option: StaleRetentionSec
+    value: '{{ dns_stale_retention }}'
+    mode: '0644'
+    path: /etc/systemd/resolved.conf
+    no_extra_spaces: true
+  register: dns_stale_retention_register
+  when: dns_stale_retention is defined
+
+- name: Check if systemd-resolved is Running
+  ansible.builtin.shell: pgrep systemd-resolve
+  failed_when: false
+  changed_when: false
+  check_mode: false
+  register: systemd_resolved_register
+
+- name: Reload systemd-resolved Service
+  ansible.builtin.command: /bin/true
+  notify: Reload systemd-resolved Service
+  when:
+    - primary_dns_servers_register.changed or
+      fallback_dns_servers_register.changed or
+      dns_domains_register.changed or
+      dns_dnssec_register.changed or
+      dns_over_tls_register.changed or
+      dns_multicast_dns_register.changed or
+      dns_llmnr_register.changed or
+      dns_cache_register.changed or
+      dns_cache_from_localhost_register.changed or
+      dns_stub_listener_register.changed or
+      dns_stub_listener_extra_register.changed or
+      dns_read_etc_hosts_register.changed or
+      dns_resolve_unicast_single_label_register.changed or
+      dns_stale_retention_register.changed
+    - systemd_resolved_register.rc == 0
