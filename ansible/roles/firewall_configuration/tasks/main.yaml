@@ -1,0 +1,153 @@
+---
+- name: Install Required Packages
+  become: true
+  apt:
+    name: '{{ item }}'
+    state: present
+  loop:
+    - ufw
+
+- name: Add IPv6 Allowance
+  become: true
+  community.general.ini_file:
+    option: IPV6
+    value: '{{ "yes" if ipv6_allowance else "no" }}'
+    mode: '0644'
+    path: /etc/default/ufw
+    no_extra_spaces: true
+  when: ipv6_allowance is defined
+  notify: Restart UFW Service
+
+- name: Enable UFW Firewall
+  become: true
+  ufw:
+    state: enabled
+    logging: on
+  notify: Restart UFW Service
+
+- name: Allow Loopback Traffic
+  become: true
+  ufw:
+    rule: allow
+    direction: in
+    interface: lo
+    comment: 'Allow loopback traffic'
+  notify: Restart UFW Service
+
+- name: Deny All Incoming Connections
+  become: true
+  ufw:
+    policy: deny
+    direction: incoming
+    comment: 'Deny all incoming connections'
+  notify: Restart UFW Service
+
+- name: Allow Incoming SSH Connections from specific IPs
+  become: true
+  ufw:
+    rule: limit
+    direction: in
+    proto: tcp
+    from_ip: '{{ item }}'
+    to_port: '{{ ssh_port }}'
+    comment: 'Allow SSH access from {{ item }}'
+  loop: '{{ allow_incoming_ssh_ips }}'
+  when: (allow_incoming_ssh_ips | default([])) | length > 0
+  notify: Restart UFW Service
+
+- name: Allow Incoming HTTP Connections from specific IPs
+  become: true
+  ufw:
+    rule: limit
+    direction: in
+    proto: tcp
+    from_ip: '{{ item }}'
+    to_port: http
+    comment: 'Allow HTTP access from {{ item }}'
+  loop: '{{ allow_incoming_http_ips }}'
+  when: (allow_incoming_http_ips | default([])) | length > 0
+  notify: Restart UFW Service
+
+- name: Allow Incoming HTTPs Connections from specific IPs
+  become: true
+  ufw:
+    rule: limit
+    direction: in
+    proto: tcp
+    from_ip: '{{ item }}'
+    to_port: https
+    comment: 'Allow HTTPs access from {{ item }}'
+  loop: '{{ allow_incoming_https_ips }}'
+  when: (allow_incoming_https_ips | default([])) | length > 0
+  notify: Restart UFW Service
+
+- name: Deny All Outgoing Connections
+  become: true
+  ufw:
+    policy: deny
+    direction: outgoing
+    comment: 'Deny all outgoing connections'
+  notify: Restart UFW Service
+
+- name: Allow Outgoing DNS Connections
+  become: true
+  ufw:
+    rule: allow
+    direction: out
+    proto: '{{ item.protocol }}'
+    to_port: '{{ item.port }}'
+    comment: 'Allow outgoing DNS connections through {{ item.protocol }} on port {{ item.port }}'
+  loop:
+    - { protocol: 'udp', port: 53 }
+    - { protocol: 'tcp', port: 53 }
+    - { protocol: 'tcp', port: 853 }
+  notify: Restart UFW Service
+
+- name: Allow Outgoing HTTP Connections
+  become: true
+  ufw:
+    rule: allow
+    direction: out
+    proto: tcp
+    to_port: http
+    comment: 'Allow outgoing HTTP connections'
+  notify: Restart UFW Service
+
+- name: Allow Outgoing HTTPs Connections
+  become: true
+  ufw:
+    rule: allow
+    direction: out
+    proto: tcp
+    to_port: https
+    comment: 'Allow outgoing HTTPs connections'
+  notify: Restart UFW Service
+
+- name: Allow Outgoing Keyserver Connections
+  become: true
+  ufw:
+    rule: allow
+    direction: out
+    proto: tcp
+    to_port: 11371
+    comment: 'Allow outgoing Keyserver connections'
+  notify: Restart UFW Service
+
+- name: Allow Outgoing NTP Connections
+  become: true
+  ufw:
+    rule: allow
+    direction: out
+    proto: udp
+    to_port: ntp
+    comment: 'Allow outgoing NTP connections'
+  notify: Restart UFW Service
+
+- name: Allow Outgoing ICMP Connections
+  become: true
+  lineinfile:
+    path: /etc/ufw/before.rules
+    insertafter: '^:ufw-before-output'
+    line: '-A ufw-before-output -p icmp -j ACCEPT'
+    state: present
+  notify: Restart UFW Service

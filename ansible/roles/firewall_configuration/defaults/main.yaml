@@ -1,0 +1,4 @@
+---
+ipv6_allowance: false
+
+ssh_port: 22
