@@ -1,5 +1,5 @@
 ---
-- name: Add Primary DNS Servers
+- name: Configure Main DNS Server
   become: true
   community.general.ini_file:
     section: Resolve
@@ -11,7 +11,7 @@
   when: (primary_dns_servers | default([])) | length > 0
   notify: Restart systemd-resolved Service
 
-- name: Add Fallback DNS Servers
+- name: Configure Fallback DNS Servers
   become: true
   community.general.ini_file:
     section: Resolve
@@ -23,7 +23,7 @@
   when: (fallback_dns_servers | default([])) | length > 0
   notify: Restart systemd-resolved Service
 
-- name: Add Server DNS Domains
+- name: Configure DNS Domains
   become: true
   community.general.ini_file:
     section: Resolve
@@ -35,7 +35,7 @@
   when: (dns_domains | default([])) | length > 0
   notify: Restart systemd-resolved Service
 
-- name: Enable DNSSEC
+- name: Configure DNSSEC
   become: true
   community.general.ini_file:
     section: Resolve
@@ -47,7 +47,7 @@
   when: dns_dnssec is defined
   notify: Restart systemd-resolved Service
 
-- name: Enable DNSOverTLS
+- name: Configure DNSOverTLS
   become: true
   community.general.ini_file:
     section: Resolve
@@ -59,7 +59,7 @@
   when: dns_over_tls is defined
   notify: Restart systemd-resolved Service
 
-- name: Enable MulticastDNS
+- name: Configure MulticastDNS
   become: true
   community.general.ini_file:
     section: Resolve
@@ -71,7 +71,7 @@
   when: dns_multicast is defined
   notify: Restart systemd-resolved Service
 
-- name: Enable LLMNR
+- name: Configure LLMNR
   become: true
   community.general.ini_file:
     section: Resolve
