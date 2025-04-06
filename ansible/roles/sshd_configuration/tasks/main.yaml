@@ -1,0 +1,512 @@
+---
+- name: Filter Out Small Primes
+  command: "awk '$5 >= 3071' {{ sshd_configuration_folder }}/moduli"
+  register: filtered_moduli
+  changed_when: false
+
+- name: Update Moduli if Needed
+  become: true
+  copy:
+    content: '{{ filtered_moduli.stdout }}'
+    dest: '{{ sshd_configuration_folder }}/moduli'
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Restart SSHD Service
+
+- name: Find All Host SSH Keys
+  find:
+    paths: '{{ sshd_configuration_folder }}'
+    patterns: 'ssh_host_*'
+  register: ssh_host_keys
+
+- name: Remove Not Needed Host SSH Keys
+  become: true
+  file:
+    path: '{{ item.path }}'
+    state: absent
+  loop: '{{ ssh_host_keys.files }}'
+  when:
+    - item.path != ssh_hostkey
+    - item.path != (ssh_hostkey + '.pub')
+  notify: Restart SSHD Service
+
+- name: Configure SSH Protocol
+  become: true
+  community.general.ini_file:
+    option: Protocol
+    value: '{{ ssh_protocol }}'
+    mode: '0644'
+    path: '{{ sshd_configuration_file }}'
+    no_extra_spaces: true
+  when: ssh_protocol is defined
+  notify: Restart SSHD Service
+
+- name: Configure UseDNS
+  become: true
+  community.general.ini_file:
+    option: UseDNS
+    value: "{{ 'yes' if ssh_use_dns else 'no' }}"
+    mode: '0644'
+    path: '{{ sshd_configuration_file }}'
+    no_extra_spaces: true
+  when: ssh_use_dns is defined
+  notify: Restart SSHD Service
+
+- name: Configure AcceptEnv
+  become: true
+  community.general.ini_file:
+    option: AcceptEnv
+    value: '{{ ssh_accept_env }}'
+    mode: '0644'
+    path: '{{ sshd_configuration_file }}'
+    no_extra_spaces: true
+  when: ssh_accept_env is defined
+  notify: Restart SSHD Service
+
+- name: Configure Port
+  become: true
+  community.general.ini_file:
+    option: Port
+    value: '{{ ssh_port }}'
+    mode: '0644'
+    path: '{{ sshd_configuration_file }}'
+    no_extra_spaces: true
+  when: ssh_port is defined
+  notify: Restart SSHD Service
+
+- name: Configure AddressFamily
+  become: true
+  community.general.ini_file:
+    option: AddressFamily
+    value: '{{ ssh_address_family }}'
+    mode: '0644'
+    path: '{{ sshd_configuration_file }}'
+    no_extra_spaces: true
+  when: ssh_address_family is defined
+  notify: Restart SSHD Service
+
+- name: Configure ListenAddress
+  become: true
+  community.general.ini_file:
+    option: ListenAddress
+    value: '{{ ssh_listen_address | join(" ") }}'
+    mode: '0644'
+    path: '{{ sshd_configuration_file }}'
+    no_extra_spaces: true
+  when: (ssh_listen_address | default([])) | length > 0
+  notify: Restart SSHD Service
+
+- name: Configure HostKey
+  become: true
+  community.general.ini_file:
+    option: HostKey
+    value: '{{ ssh_hostkey }}'
+    mode: '0644'
+    path: '{{ sshd_configuration_file }}'
+    no_extra_spaces: true
+  when: ssh_hostkey is defined
+  notify: Restart SSHD Service
+
+- name: Configure KexAlgorithms
+  become: true
+  community.general.ini_file:
+    option: KexAlgorithms
+    value: '{{ ssh_kex_algorithms | join(",") }}'
+    mode: '0644'
+    path: '{{ sshd_configuration_file }}'
+    no_extra_spaces: true
+  when: (ssh_kex_algorithms | default([])) | length > 0
+  notify: Restart SSHD Service
+
+- name: Configure Ciphers
+  become: true
+  community.general.ini_file:
+    option: Ciphers
+    value: '{{ ssh_ciphers | join(",") }}'
+    mode: '0644'
+    path: '{{ sshd_configuration_file }}'
+    no_extra_spaces: true
+  when: (ssh_ciphers | default([])) | length > 0
+  notify: Restart SSHD Service
+
+- name: Configure MACs
+  become: true
+  community.general.ini_file:
+    option: MACs
+    value: '{{ ssh_macs | join(",") }}'
+    mode: '0644'
+    path: '{{ sshd_configuration_file }}'
+    no_extra_spaces: true
+  when: (ssh_macs | default([])) | length > 0
+  notify: Restart SSHD Service
+
+- name: Configure PermitRootLogin
+  become: true
+  community.general.ini_file:
+    option: PermitRootLogin
+    value: "{{ 'yes' if ssh_permit_root_login else 'no' }}"
+    mode: '0644'
+    path: '{{ sshd_configuration_file }}'
+    no_extra_spaces: true
+  when: ssh_permit_root_login is defined
+  notify: Restart SSHD Service
+
+- name: Configure PasswordAuthentication
+  become: true
+  community.general.ini_file:
+    option: PasswordAuthentication
+    value: "{{ 'yes' if ssh_password_authentication else 'no' }}"
+    mode: '0644'
+    path: '{{ sshd_configuration_file }}'
+    no_extra_spaces: true
+  when: ssh_password_authentication is defined
+  notify: Restart SSHD Service
+
+- name: Configure PermitEmptyPasswords
+  become: true
+  community.general.ini_file:
+    option: PermitEmptyPasswords
+    value: "{{ 'yes' if ssh_permit_empty_passwords else 'no' }}"
+    mode: '0644'
+    path: '{{ sshd_configuration_file }}'
+    no_extra_spaces: true
+  when: ssh_permit_empty_passwords is defined
+  notify: Restart SSHD Service
+
+- name: Configure AuthenticationMethods
+  become: true
+  community.general.ini_file:
+    option: AuthenticationMethods
+    value: '{{ ssh_authentication_methods | join(",") }}'
+    mode: '0644'
+    path: '{{ sshd_configuration_file }}'
+    no_extra_spaces: true
+  when: (ssh_authentication_methods | default([])) | length > 0
+  notify: Restart SSHD Service
+
+- name: Configure ChallengeResponseAuthentication
+  become: true
+  community.general.ini_file:
+    option: ChallengeResponseAuthentication
+    value: "{{ 'yes' if ssh_challenge_response else 'no' }}"
+    mode: '0644'
+    path: '{{ sshd_configuration_file }}'
+    no_extra_spaces: true
+  when: ssh_challenge_response is defined
+  notify: Restart SSHD Service
+
+- name: Configure UsePAM
+  become: true
+  community.general.ini_file:
+    option: UsePAM
+    value: "{{ 'yes' if ssh_use_pam else 'no' }}"
+    mode: '0644'
+    path: '{{ sshd_configuration_file }}'
+    no_extra_spaces: true
+  when: ssh_use_pam is defined
+  notify: Restart SSHD Service
+
+- name: Configure LoginGraceTime
+  become: true
+  community.general.ini_file:
+    option: LoginGraceTime
+    value: '{{ ssh_login_grace_time }}'
+    mode: '0644'
+    path: '{{ sshd_configuration_file }}'
+    no_extra_spaces: true
+  when: ssh_login_grace_time is defined
+  notify: Restart SSHD Service
+
+- name: Configure MaxAuthTries
+  become: true
+  community.general.ini_file:
+    option: MaxAuthTries
+    value: '{{ ssh_max_auth_tries }}'
+    mode: '0644'
+    path: '{{ sshd_configuration_file }}'
+    no_extra_spaces: true
+  when: ssh_max_auth_tries is defined
+  notify: Restart SSHD Service
+
+- name: Configure PubkeyAuthentication
+  become: true
+  community.general.ini_file:
+    option: PubkeyAuthentication
+    value: "{{ 'yes' if ssh_pubkey_auth else 'no' }}"
+    mode: '0644'
+    path: '{{ sshd_configuration_file }}'
+    no_extra_spaces: true
+  when: ssh_pubkey_auth is defined
+  notify: Restart SSHD Service
+
+- name: Configure StrictModes
+  become: true
+  community.general.ini_file:
+    option: StrictModes
+    value: "{{ 'yes' if ssh_strict_modes else 'no' }}"
+    mode: '0644'
+    path: '{{ sshd_configuration_file }}'
+    no_extra_spaces: true
+  when: ssh_strict_modes is defined
+  notify: Restart SSHD Service
+
+- name: Configure AllowGroups
+  become: true
+  community.general.ini_file:
+    option: AllowGroups
+    value: '{{ ssh_allow_groups | join(" ") }}'
+    mode: '0644'
+    path: '{{ sshd_configuration_file }}'
+    no_extra_spaces: true
+  when: (ssh_allow_groups | default([])) | length > 0
+  notify: Restart SSHD Service
+
+- name: Configure DenyGroups
+  become: true
+  community.general.ini_file:
+    option: DenyGroups
+    value: '{{ ssh_deny_groups | join(" ") }}'
+    mode: '0644'
+    path: '{{ sshd_configuration_file }}'
+    no_extra_spaces: true
+  when: (ssh_deny_groups | default([])) | length > 0
+  notify: Restart SSHD Service
+
+- name: Configure AllowUsers
+  become: true
+  community.general.ini_file:
+    option: AllowUsers
+    value: '{{ ssh_allow_users | join(" ") }}'
+    mode: '0644'
+    path: '{{ sshd_configuration_file }}'
+    no_extra_spaces: true
+  when: (ssh_allow_users | default([])) | length > 0
+  notify: Restart SSHD Service
+
+- name: Configure DenyUsers
+  become: true
+  community.general.ini_file:
+    option: DenyUsers
+    value: '{{ ssh_deny_users | join(" ") }}'
+    mode: '0644'
+    path: '{{ sshd_configuration_file }}'
+    no_extra_spaces: true
+  when: (ssh_deny_users | default([])) | length > 0
+  notify: Restart SSHD Service
+
+- name: Configure AllowAgentForwarding
+  become: true
+  community.general.ini_file:
+    option: AllowAgentForwarding
+    value: "{{ 'yes' if ssh_allow_agent_forwarding else 'no' }}"
+    mode: '0644'
+    path: '{{ sshd_configuration_file }}'
+    no_extra_spaces: true
+  when: ssh_allow_agent_forwarding is defined
+  notify: Restart SSHD Service
+
+- name: Configure AllowTcpForwarding
+  become: true
+  community.general.ini_file:
+    option: AllowTcpForwarding
+    value: "{{ 'yes' if ssh_allow_tcp_forwarding else 'no' }}"
+    mode: '0644'
+    path: '{{ sshd_configuration_file }}'
+    no_extra_spaces: true
+  when: ssh_allow_tcp_forwarding is defined
+  notify: Restart SSHD Service
+
+- name: Configure AllowStreamLocalForwarding
+  become: true
+  community.general.ini_file:
+    option: AllowStreamLocalForwarding
+    value: "{{ 'yes' if ssh_allow_stream_local_forwarding else 'no' }}"
+    mode: '0644'
+    path: '{{ sshd_configuration_file }}'
+    no_extra_spaces: true
+  when: ssh_allow_stream_local_forwarding is defined
+  notify: Restart SSHD Service
+
+- name: Configure GatewayPorts
+  become: true
+  community.general.ini_file:
+    option: GatewayPorts
+    value: "{{ 'yes' if ssh_gateway_ports else 'no' }}"
+    mode: '0644'
+    path: '{{ sshd_configuration_file }}'
+    no_extra_spaces: true
+  when: ssh_gateway_ports is defined
+  notify: Restart SSHD Service
+
+- name: Configure X11Forwarding
+  become: true
+  community.general.ini_file:
+    option: X11Forwarding
+    value: "{{ 'yes' if ssh_x11_forwarding else 'no' }}"
+    mode: '0644'
+    path: '{{ sshd_configuration_file }}'
+    no_extra_spaces: true
+  when: ssh_x11_forwarding is defined
+  notify: Restart SSHD Service
+
+- name: Configure PermitTunnel
+  become: true
+  community.general.ini_file:
+    option: PermitTunnel
+    value: "{{ 'yes' if ssh_permit_tunnel else 'no' }}"
+    mode: '0644'
+    path: '{{ sshd_configuration_file }}'
+    no_extra_spaces: true
+  when: ssh_permit_tunnel is defined
+  notify: Restart SSHD Service
+
+- name: Configure PermitUserEnvironment
+  become: true
+  community.general.ini_file:
+    option: PermitUserEnvironment
+    value: "{{ 'yes' if ssh_permit_user_environment else 'no' }}"
+    mode: '0644'
+    path: '{{ sshd_configuration_file }}'
+    no_extra_spaces: true
+  when: ssh_permit_user_environment is defined
+  notify: Restart SSHD Service
+
+- name: Configure IgnoreRhosts
+  become: true
+  community.general.ini_file:
+    option: IgnoreRhosts
+    value: "{{ 'yes' if ssh_ignore_rhosts else 'no' }}"
+    mode: '0644'
+    path: '{{ sshd_configuration_file }}'
+    no_extra_spaces: true
+  when: ssh_ignore_rhosts is defined
+  notify: Restart SSHD Service
+
+- name: Configure HostbasedAuthentication
+  become: true
+  community.general.ini_file:
+    option: HostbasedAuthentication
+    value: "{{ 'yes' if ssh_hostbased_auth else 'no' }}"
+    mode: '0644'
+    path: '{{ sshd_configuration_file }}'
+    no_extra_spaces: true
+  when: ssh_hostbased_auth is defined
+  notify: Restart SSHD Service
+
+- name: Configure ClientAliveInterval
+  become: true
+  community.general.ini_file:
+    option: ClientAliveInterval
+    value: '{{ ssh_client_alive_interval }}'
+    mode: '0644'
+    path: '{{ sshd_configuration_file }}'
+    no_extra_spaces: true
+  when: ssh_client_alive_interval is defined
+  notify: Restart SSHD Service
+
+- name: Configure ClientAliveCountMax
+  become: true
+  community.general.ini_file:
+    option: ClientAliveCountMax
+    value: '{{ ssh_client_alive_count_max }}'
+    mode: '0644'
+    path: '{{ sshd_configuration_file }}'
+    no_extra_spaces: true
+  when: ssh_client_alive_count_max is defined
+  notify: Restart SSHD Service
+
+- name: Configure MaxSessions
+  become: true
+  community.general.ini_file:
+    option: MaxSessions
+    value: '{{ ssh_max_sessions }}'
+    mode: '0644'
+    path: '{{ sshd_configuration_file }}'
+    no_extra_spaces: true
+  when: ssh_max_sessions is defined
+  notify: Restart SSHD Service
+
+- name: Configure MaxStartups
+  become: true
+  community.general.ini_file:
+    option: MaxStartups
+    value: '{{ ssh_max_startups }}'
+    mode: '0644'
+    path: '{{ sshd_configuration_file }}'
+    no_extra_spaces: true
+  when: ssh_max_startups is defined
+  notify: Restart SSHD Service
+
+- name: Configure Compression
+  become: true
+  community.general.ini_file:
+    option: Compression
+    value: "{{ 'yes' if ssh_compression else 'no' }}"
+    mode: '0644'
+    path: '{{ sshd_configuration_file }}'
+    no_extra_spaces: true
+  when: ssh_compression is defined
+  notify: Restart SSHD Service
+
+- name: Configure TCPKeepAlive
+  become: true
+  community.general.ini_file:
+    option: TCPKeepAlive
+    value: "{{ 'yes' if ssh_tcp_keepalive else 'no' }}"
+    mode: '0644'
+    path: '{{ sshd_configuration_file }}'
+    no_extra_spaces: true
+  when: ssh_tcp_keepalive is defined
+  notify: Restart SSHD Service
+
+- name: Configure PrintMotd
+  become: true
+  community.general.ini_file:
+    option: PrintMotd
+    value: "{{ 'yes' if ssh_print_motd else 'no' }}"
+    mode: '0644'
+    path: '{{ sshd_configuration_file }}'
+    no_extra_spaces: true
+  when: ssh_print_motd is defined
+  notify: Restart SSHD Service
+
+- name: Configure PrintLastLog
+  become: true
+  community.general.ini_file:
+    option: PrintLastLog
+    value: "{{ 'yes' if ssh_print_last_log else 'no' }}"
+    mode: '0644'
+    path: '{{ sshd_configuration_file }}'
+    no_extra_spaces: true
+  when: ssh_print_last_log is defined
+  notify: Restart SSHD Service
+
+- name: Configure LogLevel
+  become: true
+  community.general.ini_file:
+    option: LogLevel
+    value: '{{ ssh_log_level }}'
+    mode: '0644'
+    path: '{{ sshd_configuration_file }}'
+    no_extra_spaces: true
+  when: ssh_log_level is defined
+  notify: Restart SSHD Service
+
+- name: Configure SyslogFacility
+  become: true
+  community.general.ini_file:
+    option: SyslogFacility
+    value: '{{ ssh_syslog_facility }}'
+    mode: '0644'
+    path: '{{ sshd_configuration_file }}'
+    no_extra_spaces: true
+  when: ssh_syslog_facility is defined
+  notify: Restart SSHD Service
+
+- name: Check if SSHD Service is running
+  ansible.builtin.shell: systemctl is-active sshd
+  failed_when: false
+  changed_when: false
+  check_mode: false
+  notify: Restart SSHD Service

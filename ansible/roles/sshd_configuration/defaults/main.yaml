@@ -1,0 +1,103 @@
+---
+sshd_configuration_folder: /etc/ssh
+
+sshd_configuration_file: '{{ sshd_configuration_folder }}/sshd_config'
+
+ssh_protocol: 2
+
+ssh_use_dns: true
+
+ssh_accept_env: LANG LC_*
+
+ssh_port: 22
+
+ssh_address_family: inet
+
+ssh_listen_address:
+  - 0.0.0.0
+
+ssh_hostkey: '{{ sshd_configuration_folder }}/ssh_host_ed25519_key'
+
+ssh_kex_algorithms:
+  - curve25519-sha256@libssh.org
+  - ecdh-sha2-nistp521
+  - ecdh-sha2-nistp384
+  - ecdh-sha2-nistp256
+
+ssh_ciphers:
+  - chacha20-poly1305@openssh.com
+  - aes256-gcm@openssh.com
+  - aes128-gcm@openssh.com
+
+ssh_macs:
+  - hmac-sha2-512-etm@openssh.com
+  - hmac-sha2-256-etm@openssh.com
+
+ssh_permit_root_login: false
+
+ssh_password_authentication: false
+
+ssh_permit_empty_passwords: false
+
+ssh_authentication_methods:
+  - publickey
+  - keyboard-interactive
+
+ssh_challenge_response: true
+
+ssh_use_pam: true
+
+ssh_login_grace_time: 20
+
+ssh_max_auth_tries: 2
+
+ssh_pubkey_auth: true
+
+ssh_strict_modes: true
+
+ssh_allow_groups:
+  - ssh
+
+ssh_deny_groups: []
+
+ssh_allow_users: []
+
+ssh_deny_users: []
+
+ssh_allow_agent_forwarding: false
+
+ssh_allow_tcp_forwarding: false
+
+ssh_allow_stream_local_forwarding: false
+
+ssh_gateway_ports: false
+
+ssh_x11_forwarding: false
+
+ssh_permit_tunnel: false
+
+ssh_permit_user_environment: false
+
+ssh_ignore_rhosts: true
+
+ssh_hostbased_auth: false
+
+ssh_client_alive_interval: 300
+
+ssh_client_alive_count_max: 0
+
+ssh_max_sessions: 2
+
+ssh_max_startups: 2
+
+ssh_compression: false
+
+ssh_tcp_keepalive: false
+
+ssh_print_motd: false
+
+ssh_print_last_log: false
+
+ssh_log_level: INFO
+
+ssh_syslog_facility: AUTHPRIV
