@@ -167,7 +167,7 @@
   when: dns_stale_retention is defined
   notify: Restart systemd-resolved Service
 
-- name: Check if systemd-resolved is Running
+- name: Check if systemd-resolved Service is Running
   ansible.builtin.shell: pgrep systemd-resolve
   failed_when: false
   changed_when: false
