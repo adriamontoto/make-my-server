@@ -1,7 +1,7 @@
 ---
-sshd_configuration_folder: /etc/ssh
+ssh_configuration_folder: /etc/ssh
 
-sshd_configuration_file: '{{ sshd_configuration_folder }}/sshd_config'
+ssh_configuration_file: '{{ ssh_configuration_folder }}/sshd_config'
 
 ssh_protocol: 2
 
@@ -16,7 +16,7 @@ ssh_address_family: inet
 ssh_listen_address:
   - 0.0.0.0
 
-ssh_hostkey: '{{ sshd_configuration_folder }}/ssh_host_ed25519_key'
+ssh_hostkey: '{{ ssh_configuration_folder }}/ssh_host_ed25519_key'
 
 ssh_kex_algorithms:
   - curve25519-sha256@libssh.org
