@@ -1,0 +1,49 @@
+---
+- name: Install Required Packages
+  become: true
+  apt:
+    name: '{{ item }}'
+    state: present
+  loop:
+    - libpam-pwquality
+
+- name: Configure PAM Password Policy
+  become: true
+  lineinfile:
+    create: true
+    regexp: '^password\s+requisite\s+pam_pwquality.so'
+    line: >-
+      password       
+      requisite                      
+      pam_pwquality.so
+      {% if password_policy_minimum_length is defined %}
+      minlen={{ password_policy_minimum_length }}
+      {% endif %}
+      {% if password_policy_minimum_digits is defined %}
+      dcredit=-{{ password_policy_minimum_digits }}
+      {% endif %}
+      {% if password_policy_minimum_lowercase is defined %}
+      lcredit=-{{ password_policy_minimum_lowercase }}
+      {% endif %}
+      {% if password_policy_minimum_uppercase is defined %}
+      ucredit=-{{ password_policy_minimum_uppercase }}
+      {% endif %}
+      {% if password_policy_minimum_special_characters is defined %}
+      ocredit=-{{ password_policy_minimum_special_characters }}
+      {% endif %}
+      {% if password_policy_maximum_consecutive_characters is defined %}
+      maxrepeat={{ password_policy_maximum_consecutive_characters }}
+      {% endif %}
+      {% if password_policy_maximum_consecutive_sequences is defined %}
+      maxsequence={{ password_policy_maximum_consecutive_sequences }}
+      {% endif %}
+      {% if password_policy_differ_from_old_password is defined %}
+      difok={{ password_policy_differ_from_old_password }}
+      {% endif %}
+      {% if password_policy_reject_username is defined %}
+      usercheck={{ 1 if password_policy_reject_username else 0 }}
+      {% endif %}
+      {% if password_policy_enforce_to_root is defined %}
+      enforce_for_root={{ 1 if password_policy_enforce_to_root else 0 }}
+      {% endif %}
+    path: '{{ password_policy_configuration_file }}'

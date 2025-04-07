@@ -1,0 +1,24 @@
+---
+password_policy_configuration_file: /etc/pam.d/common-password
+
+password_policy_minimum_length: 64
+
+password_policy_minimum_digits: 8
+
+password_policy_minimum_lowercase: 8
+
+password_policy_minimum_uppercase: 8
+
+password_policy_minimum_special_characters: 8
+
+password_policy_maximum_consecutive_characters: 4
+
+password_policy_maximum_consecutive_sequences: 4
+
+# Ensure that the new password differs x characters from the old password
+password_policy_differ_from_old_password: 8
+
+# Reject new passwords that contain the user username
+password_policy_reject_username: true
+
+password_policy_enforce_to_root: true
